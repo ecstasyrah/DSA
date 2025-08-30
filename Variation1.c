@@ -38,10 +38,14 @@ List initialize(List L){
 }
 
 void display(List L){
-    printf("List elements: ");
+    printf("List elements: [");
     for(int i = 0; i < L.count; i++){
-        printf("%d ", L.elem[i]);
+        printf(" %d", L.elem[i]);
+        if (i != L.count-1) {
+            printf(",");
+        }
     }
+    printf(" ]");
 }
 
 int locate(List L, int data){
@@ -160,5 +164,4 @@ void select(List L) {
 
             break;
     }
-
 }
