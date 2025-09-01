@@ -1,7 +1,6 @@
 #include <stdio.h>
-#include <stdbool.h>
 
-#define MAX 5
+#define MAX 10
 
 typedef struct{
     int elem[MAX];
@@ -26,9 +25,10 @@ int main(){
 }
 
 List initialize(List L){
+     int i;
     printf("How many elements would you like to enter? ");
     scanf("%d", &L.count);
-    for(int i = 0; i < L.count;i++){
+    for(i = 0; i < L.count;i++){
         printf("Element %d: ",i + 1);
         scanf("%d", &L.elem[i]);
     }
@@ -38,8 +38,9 @@ List initialize(List L){
 }
 
 void display(List L){
+     int i;
     printf("List elements: [");
-    for(int i = 0; i < L.count; i++){
+    for(i = 0; i < L.count; i++){
         printf(" %d", L.elem[i]);
         if (i != L.count-1) {
             printf(",");
@@ -49,7 +50,8 @@ void display(List L){
 }
 
 int locate(List L, int data){
-    for(int i = 0 ;i < L.count; i++){
+    int i;
+    for(i = 0 ;i < L.count; i++){
         if(L.elem[i] == data){
             printf("Element is in position %d", i+1);
             return 0;
@@ -92,8 +94,11 @@ List deletePos(List L, int position) {
 
 List insertSorted(List L, int data) {
     int pos = 0;
+    int i;
+    
+    
     if (L.count != MAX) {
-        for (int i = 0; i < L.count;i++) {
+        for (i = 0; i < L.count;i++) {
             if(L.elem[i] > data) {
                 pos = i+1;
                 break;

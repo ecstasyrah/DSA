@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAX 5
+#define MAX 10
 
 typedef struct {
     int elem[MAX];
@@ -23,39 +23,46 @@ int main() {
 
     initialize(&L);
 
-    select(&L);
+    select(L);
 
     return 0;
 }
 
 void initialize(EPtr *L) {
-    *L = (EPtr)malloc(sizeof(Etype));
+    int count = 0;
+    printf("How many elements would you like to enter? ");
+    scanf("%d", &count);
 
-    if (*L != NULL) {
-        (*L)->count = 0;
+    *L = (EPtr)malloc(sizeof(Etype));
+    if (*L == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
     }
+
+    (*L)->count = count;
+
+    for(int i = 0; i < (*L)->count; i++) {
+        printf("Element %d: ", i + 1);
+        scanf("%d", &(*L)->elem[i]);
+    }
+
+    printf("List initialized with %d elements.\n", (*L)->count);
+    display(*L);
 }
 void insertPos(EPtr L, int data, int position) {
-    if (L->count >= MAX) {
-        printf("\nError: The list is full. Cannot insert more elements.\n");
-        deletePos(L,position);
-        return;
+    int i;
+    for(i = L->count; i>=position - 1;i--){
+        if(position > L->count){
+            L->elem[L->count] = L->elem[i];
+        }else {
+            L->elem[i] = L->elem[i-1];
+        }
     }
-
-    if (position < 1 || position > L->count + 1) {
-        printf("\nError: Invalid position. Please enter a position between 1 and %d.\n", L->count + 1);
-        return;
-    }
-
-    for (int i = L->count; i >= position - 1; i--) {
-        L->elem[i + 1] = L->elem[i];
-    }
-
     L->elem[position - 1] = data;
-
     L->count++;
 
-    printf("\nData %d inserted successfully at position %d.\n", data, position);
+    printf("\nNew List: \t");
+    display(L);
 }
 
 void deletePos(EPtr L, int position) {
@@ -74,6 +81,7 @@ void deletePos(EPtr L, int position) {
     }
     L->count--;
     printf("\nElement at position %d deleted successfully.\n", position);
+    display(L);
 }
 
 int locate(EPtr L, int data) {
@@ -87,7 +95,7 @@ int locate(EPtr L, int data) {
 
 int retrieve(EPtr L, int position) {
     if (position < 1 || position > L->count) {
-        printf("\nError: Invalid position. Cannot retrieve element.\n");
+        printf("Error: Invalid position. Cannot retrieve element.\n");
         return -9999; // Return an error value
     }
     return L->elem[position - 1];
@@ -95,7 +103,7 @@ int retrieve(EPtr L, int position) {
 
 void insertSorted(EPtr L, int data) {
     if (L->count >= MAX) {
-        printf("\nError: The list is full. Cannot insert.\n");
+        printf("Error: The list is full. Cannot insert.\n");
         return;
     }
 
@@ -106,24 +114,29 @@ void insertSorted(EPtr L, int data) {
     }
     L->elem[i + 1] = data;
     L->count++;
-    printf("\nData %d inserted into sorted list.\n", data);
+    printf("Data %d inserted into sorted list.\n", data);
+    display(L);
 }
 
 void display(EPtr L) {
     if (L->count == 0) {
-        printf("\nList is empty.\n");
+        printf("List is empty.\n");
         return;
     }
-    printf("\nList elements: ");
+
+    printf("\nList elements: [ ");
     for (int i = 0; i < L->count; i++) {
-        printf("%d ", L->elem[i]);
+        printf("%d", L->elem[i]);
+        if(i < L->count - 1){
+            printf(", ");
+        }
     }
-    printf("\n");
+    printf(" ]\n\n");
 }
 
 void makeNULL(EPtr L) {
-    L->count = 0;
-    printf("\nList has been cleared.\n");
+    free(L);
+    printf("Memory is FREEEEEE. Exiting program.\n");
 }
 
 void select(EPtr L) {
@@ -135,9 +148,7 @@ void select(EPtr L) {
         printf("\n3. Locate an Element");
         printf("\n4. Retrieve an Element");
         printf("\n5. Insert in a Sorted List");
-        printf("\n6. Display List");
-        printf("\n7. Clear List (makeNULL)");
-        printf("\n0. Exit");
+        printf("\n6. Exit(makeNULL)");
         printf("\nEnter your choice: ");
         scanf("%d", &choice);
 
@@ -167,7 +178,7 @@ void select(EPtr L) {
             case 4:
                 printf("Enter position to retrieve: ");
                 scanf("%d", &position);
-                int retrieved_data = retrieve(L, position);
+                int retrieved_data = retrieve(&L, position);
                 if (retrieved_data != -9999) {
                     printf("Element at position %d is: %d\n", position, retrieved_data);
                 }
@@ -178,13 +189,7 @@ void select(EPtr L) {
                 insertSorted(L, data);
                 break;
             case 6:
-                display(L);
-                break;
-            case 7:
                 makeNULL(L);
-                break;
-            case 0:
-                printf("\nExiting program.\n");
                 break;
             default:
                 printf("\nInvalid choice. Please try again.\n");
