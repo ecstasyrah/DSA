@@ -166,7 +166,7 @@ void select(List L) {
             select(L);
             break;
         case 6:
-
+            printf("Exiting...");
             break;
     }
 }

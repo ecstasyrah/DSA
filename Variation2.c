@@ -137,6 +137,7 @@ void display(EPtr L) {
 void makeNULL(EPtr L) {
     free(L);
     printf("Memory is FREEEEEE. Exiting program.\n");
+    break;
 }
 
 void select(EPtr L) {
@@ -178,7 +179,7 @@ void select(EPtr L) {
             case 4:
                 printf("Enter position to retrieve: ");
                 scanf("%d", &position);
-                int retrieved_data = retrieve(&L, position);
+                int retrieved_data = retrieve(L, position);
                 if (retrieved_data != -9999) {
                     printf("Element at position %d is: %d\n", position, retrieved_data);
                 }
