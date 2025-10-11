@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #define MAX 10
 
@@ -9,36 +10,33 @@ typedef struct{
 }Stack;
 
 Stack* initialize();
+bool isFull(Stack* S);
+void isEmpty(Stack* S);
 void push(Stack* s, int value);
 int pop(Stack* s);
-// int peek(Stack* s);
+int peek(Stack* s);
 void display(Stack* s);
 
 int main(){
     Stack *S = initialize();
 
-    push(S, 5);
-    push(S, 2);
-    push(S, 6);
-    push(S, 8);
+    push(S, 1);
     push(S, 3);
-    push(S, 4);
+    push(S, 2);
     push(S, 5);
+    push(S, 4);
 
     display(S);
 
+    printf("\n\nPop:");
     int value = pop(S);
-    printf("\n\nLast top value was %d\n New top: %d", value, S->top);
+    printf("\nLast top value was %d\n New top: %d", value, S->top);
+
+    printf("\n\nPeek:\nTop: %d\t\tValue: %d", S->top, peek(S));
 }
 
 Stack* initialize(){
     Stack *S = (Stack*)malloc(sizeof(Stack));
-    // if(S==NULL){
-    //     printf("Data allocation unsuccessful");
-    //     return NULL;
-    // }else{
-    //     printf("SUMAKSES KA!!\n\n");
-    // }
 
     S->top = -1;
 
@@ -46,9 +44,7 @@ Stack* initialize(){
 }
 
 void display(Stack* s){
-    if(s->top == -1){
-        printf("Stack is empty\n");
-    }
+    isEmpty(s);
     printf("\nDisplay: [ ");
     for(int i = 0; i <= s->top; i++){
         printf("%d", s->items[i]);
@@ -61,7 +57,7 @@ void display(Stack* s){
 }
 
 void push(Stack* s, int value){
-    if(s->top == MAX - 1){
+    if(isFull(s) == 1){
         s->top++;
     }else{
         s->top++;
@@ -70,10 +66,26 @@ void push(Stack* s, int value){
 }
 
 int pop(Stack* s){
-    if(s->top == -1){
-        printf("Stack is empty");
-    }
+    isEmpty(s);
     int value = s->items[s->top];
     s->top--;
     return value;
+}
+
+int peek(Stack* s) {
+    isEmpty(s);
+    int value = s->items[s->top];
+
+    return value;
+}
+
+bool isFull(Stack* S) {
+    if (S->top == MAX - 1) {
+        return 1;
+    }
+}
+void isEmpty(Stack* S) {
+    if (S->top == - 1) {
+        printf("Stack is empty.");
+    }
 }
