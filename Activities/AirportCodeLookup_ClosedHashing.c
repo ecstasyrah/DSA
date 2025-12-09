@@ -6,16 +6,14 @@
 #define TOTAL_SIZE 20
 #define NULL_CURSOR -1
 
-// Structure for hash table node
 typedef struct {
-    char code[4];      // Airport code (3 chars + null terminator)
-    int cursor;        // Cursor/link to next element in chain
-    int occupied;      // 1 if occupied, 0 if empty
+    char code[4];
+    int cursor;
+    int occupied;
 } HashNode;
 
-// Global hash table and AVAIL pointer
 HashNode hashTable[TOTAL_SIZE];
-int AVAIL = PRIMARY_SIZE;  // Initially points to first overflow slot
+int AVAIL = PRIMARY_SIZE;
 
 // Hash function
 int hash(char *code) {
@@ -25,7 +23,6 @@ int hash(char *code) {
     return val;
 }
 
-// Initialize hash table
 void initHashTable() {
     for (int i = 0; i < TOTAL_SIZE; i++) {
         hashTable[i].code[0] = '\0';
@@ -35,13 +32,11 @@ void initHashTable() {
     AVAIL = PRIMARY_SIZE;
 }
 
-// Insert with progressive overflow
 void insert(char *code) {
     int hashVal = hash(code);
 
     printf("\nInserting %s (hash = %d):\n", code, hashVal);
 
-    // If primary slot is empty, insert directly
     if (hashTable[hashVal].occupied == 0) {
         strcpy(hashTable[hashVal].code, code);
         hashTable[hashVal].occupied = 1;
@@ -49,29 +44,24 @@ void insert(char *code) {
         printf("  -> Inserted at index %d (primary slot)\n", hashVal);
         printf("  -> AVAIL = %d\n", AVAIL);
     }
-    // Collision: use progressive overflow
     else {
         printf("  -> Collision detected at index %d\n", hashVal);
 
-        // Find the last node in the chain
         int current = hashVal;
         while (hashTable[current].cursor != NULL_CURSOR) {
             current = hashTable[current].cursor;
         }
 
-        // Insert at AVAIL position
         if (AVAIL < TOTAL_SIZE) {
             strcpy(hashTable[AVAIL].code, code);
             hashTable[AVAIL].occupied = 1;
             hashTable[AVAIL].cursor = NULL_CURSOR;
 
-            // Update cursor of last node in chain
             hashTable[current].cursor = AVAIL;
 
             printf("  -> Inserted at overflow index %d\n", AVAIL);
             printf("  -> Updated cursor of index %d to point to %d\n", current, AVAIL);
 
-            AVAIL++;  // Move AVAIL to next available slot
             printf("  -> AVAIL = %d\n", AVAIL);
         } else {
             printf("  -> ERROR: Hash table overflow! No more space.\n");
@@ -79,7 +69,6 @@ void insert(char *code) {
     }
 }
 
-// Display the hash table
 void displayHashTable() {
     printf("\n");
     printf("=======================================================\n");
@@ -107,7 +96,6 @@ void displayHashTable() {
     printf("=======================================================\n");
 }
 
-// Display hash index for each code
 void displayHashIndex() {
     printf("\n");
     printf("=======================================================\n");
@@ -164,15 +152,12 @@ int main() {
     printf("  Cursor-Based with Progressive Overflow\n");
     printf("=======================================================\n");
 
-    // Initialize hash table
     initHashTable();
 
-    // Insert all airport codes
     for (int i = 0; i < numAirports; i++) {
         insert(airports[i]);
     }
 
-    // Display results
     displayHashTable();
     displayHashIndex();
     displayCollisionChains();
