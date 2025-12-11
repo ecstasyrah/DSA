@@ -33,12 +33,12 @@ void enqueue(PQ* prio, char* name, int priority) {
     strcpy(newNode->name, name);
     newNode->priority = priority;
 
-    if (prio->front == NULL || newNode->priority > prio->front->priority) {
+    if (prio->front == NULL || newNode->priority < prio->front->priority) {
         newNode->next = prio->front;
         prio->front = newNode;
     }else {
         Node* temp = prio->front;
-        while(temp->next!=NULL && temp->next->priority >= newNode->priority) {
+        while(temp->next!=NULL && temp->next->priority <= newNode->priority) {
             temp = temp->next;
         }
         newNode->next = temp->next;
@@ -57,6 +57,7 @@ char* dequeue(PQ* prio) {
     prio->front = prio->front->next;
 
     return removedName;
+
 }
 
 bool isPatientInQueue(PQ* prio, char* targetName) {
@@ -117,7 +118,9 @@ int main() {
     }else {
         printf("%s is not here\n",name);
     }
-    printf("\n%s is done\n\n", dequeue(prio));
+
+    char* remove = dequeue(prio);
+    printf("\n%s is done\n\n", remove);
 
     display(prio);
     enqueue(prio, "Sachi", 30);
@@ -133,5 +136,7 @@ int main() {
 
     findPatientsLike(prio, fragment);
     free(prio);
+    free(remove);
+
     return 0;
 }
